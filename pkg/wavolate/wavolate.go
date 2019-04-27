@@ -109,9 +109,9 @@ func (w *Wavolate) Sample() (*SampleSet, error) {
 	config := decoder.Config()
 
 	var seconds int
-	samples := make(audio.Float64, uint(config.SampleRate*config.Channels)/w.resolution)
 	sampleSet := &SampleSet{}
 	for {
+		samples := make(audio.Float64, uint(config.SampleRate*config.Channels)/w.resolution)
 		_, err := decoder.Read(samples)
 		if err != nil && err != audio.EOS {
 			return nil, err
@@ -119,9 +119,10 @@ func (w *Wavolate) Sample() (*SampleSet, error) {
 
 		thisSample := &Sample{
 			Timecode: seconds,
-			//Sample:   samples,
-			Sample: []float64{rms(samples)},
+			Sample:   samples,
+			//Sample: []float64{rms(samples)},
 		}
+
 		sampleSet.Samples = append(sampleSet.Samples, thisSample)
 
 		if err == audio.EOS {

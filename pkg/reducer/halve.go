@@ -1,8 +1,6 @@
 package reducer
 
 import (
-	"math"
-
 	"azul3d.org/engine/audio"
 )
 
@@ -22,18 +20,19 @@ func NewHalfReducer() *HalfReducer {
 // Reduce perorms a HalfReduce
 func (c *HalfReducer) Reduce(samples audio.Float64) []float64 {
 	var sampleSlice []float64
+	const modulo = 2
 
 	for i := range samples {
-		if (i % 2) == 0 {
+		if (i % modulo) == 0 {
 			sum := samples.At(i)
 			if len(samples)-1 < i {
 				sum += samples.At(i + 1)
 			}
-			normalized := math.Exp(sum)
-			if sum < 0 {
-				normalized = -normalized
-			}
-			sampleSlice = append(sampleSlice, normalized/2)
+			//normalized := math.Exp(sum)
+			//if sum < 0 {
+			//	sum = -sum
+			//}
+			sampleSlice = append(sampleSlice, sum/modulo)
 		}
 	}
 	return sampleSlice

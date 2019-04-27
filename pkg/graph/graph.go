@@ -70,8 +70,8 @@ func (g *Graph) Draw(set *wavolate.ReducedSampleSet) (*bytes.Buffer, error) {
 				return ""
 			},
 			//			Range: &chart.ContinuousRange{
-			//				Min: -1.0,
-			//				Max: 1.0,
+			//				Min: -0.0005,
+			//				Max: 0.0005,
 			//			},
 		},
 		Series: []chart.Series{
