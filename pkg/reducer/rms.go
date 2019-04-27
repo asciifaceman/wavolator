@@ -25,17 +25,20 @@ func NewRMSReducer() *RMSReducer {
 func (r *RMSReducer) Reduce(samples audio.Float64) []float64 {
 	// Square and sum all input samples
 	var sumSquare float64
+	//spew.Dump(len(samples))
 	for i := range samples {
+		//this := math.Exp(samples.At(i))
 		sumSquare += math.Pow(samples.At(i), 2)
 	}
 
+	//spew.Dump(sumSquare)
 	// Multiply squared sum by length of samples slice, return square root
 	squared := math.Sqrt(sumSquare / float64(samples.Len()))
-
-	normalized := math.Exp(squared)
+	//spew.Dump(fmt.Sprintf("==%06f", squared))
+	//normalized := math.Exp(squared)
 
 	// Append to a slice to conform
 	var sampleSlice []float64
-	sampleSlice = append(sampleSlice, normalized)
+	sampleSlice = append(sampleSlice, squared)
 	return sampleSlice
 }

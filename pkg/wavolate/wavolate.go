@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"time"
 
@@ -118,7 +119,8 @@ func (w *Wavolate) Sample() (*SampleSet, error) {
 
 		thisSample := &Sample{
 			Timecode: seconds,
-			Sample:   samples,
+			//Sample:   samples,
+			Sample: []float64{rms(samples)},
 		}
 		sampleSet.Samples = append(sampleSet.Samples, thisSample)
 
@@ -139,6 +141,17 @@ func (w *Wavolate) Sample() (*SampleSet, error) {
 	return sampleSet, nil
 }
 
+func rms(samples audio.Float64) float64 {
+	// Square and sum all input samples
+	var sumSquare float64
+	for i := range samples {
+		sumSquare += math.Pow(samples.At(i), 2)
+	}
+
+	// Multiply squared sum by length of samples slice, return square root
+	return math.Sqrt(sumSquare / float64(samples.Len()))
+}
+
 // Reduce reduces the sample set with the configured reducer
 func (w *Wavolate) Reduce(samples *SampleSet) *ReducedSampleSet {
 	s := &ReducedSampleSet{}
@@ -151,6 +164,7 @@ func (w *Wavolate) Reduce(samples *SampleSet) *ReducedSampleSet {
 		}
 		s.Samples = append(s.Samples, thisSample)
 	}
+	//	spew.Dump(s.Samples)
 
 	return s
 }

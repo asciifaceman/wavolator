@@ -57,6 +57,8 @@ to quickly create a Cobra application.`,
 			)
 		}
 
+		//spew.Dump(set)
+
 		reduced := w.Reduce(set)
 
 		//spew.Dump(reduced)

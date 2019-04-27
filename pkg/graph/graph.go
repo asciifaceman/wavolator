@@ -80,7 +80,8 @@ func (g *Graph) Draw(set *wavolate.ReducedSampleSet) (*bytes.Buffer, error) {
 					Show:        true,
 					StrokeColor: chart.GetDefaultColor(0).WithAlpha(64),
 					//FillColor:   chart.GetDefaultColor(0).WithAlpha(64),
-					StrokeWidth: 0.01,
+					StrokeWidth: 1,
+					// StrokeWidth: 0.01, //for heatmap
 				},
 				XValues: x,
 				YValues: y,
@@ -150,6 +151,11 @@ func (g *Graph) process(set *wavolate.ReducedSampleSet) ([]float64, []float64) {
 	//var timeObserved float64
 
 	for _, sample := range set.Samples {
+		if len(sample.Sample) == 1 {
+			x = append(x, float64(sample.Timecode))
+			y = append(y, sample.Sample[0])
+			continue
+		}
 		for inner, sub := range sample.Sample {
 			// sample.Timecode may represent thousands
 			// of files, which suchs for graphing

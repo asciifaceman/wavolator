@@ -36,7 +36,7 @@ func (c *DecimateReducer) Reduce(samples audio.Float64) []float64 {
 			if sum < 0 {
 				normalized = -normalized
 			}
-			sampleSlice = append(sampleSlice, normalized/10)
+			sampleSlice = append(sampleSlice, normalized/99)
 		}
 	}
 	return sampleSlice
