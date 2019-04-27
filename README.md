@@ -27,3 +27,7 @@ Reducers implemented:
     * Uses a  `%10` to reduce the dataset by about 90%
 
 # Example Output
+
+`go run main.go process graph -f ../wavolator-old/good-idea.wav -d decimate`
+
+![](static/example.png)
