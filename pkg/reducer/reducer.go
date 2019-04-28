@@ -4,7 +4,6 @@ package reducer
 
 import (
 	"fmt"
-	"math"
 	"strings"
 
 	"azul3d.org/engine/audio"
@@ -34,7 +33,7 @@ func NewBaseReducer() *BaseReducer {
 func (b *BaseReducer) Reduce(samples audio.Float64) []float64 {
 	var generic []float64
 	for _, sample := range samples {
-		generic = append(generic, math.Exp(sample))
+		generic = append(generic, sample)
 	}
 	return generic
 }

@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"time"
 
@@ -142,6 +141,7 @@ func (w *Wavolate) Sample() (*SampleSet, error) {
 	return sampleSet, nil
 }
 
+/*
 func rms(samples audio.Float64) float64 {
 	// Square and sum all input samples
 	var sumSquare float64
@@ -152,6 +152,7 @@ func rms(samples audio.Float64) float64 {
 	// Multiply squared sum by length of samples slice, return square root
 	return math.Sqrt(sumSquare / float64(samples.Len()))
 }
+*/
 
 // Reduce reduces the sample set with the configured reducer
 func (w *Wavolate) Reduce(samples *SampleSet) *ReducedSampleSet {

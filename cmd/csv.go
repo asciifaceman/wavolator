@@ -17,8 +17,15 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/asciifaceman/wavolator/pkg/generator"
+	"github.com/asciifaceman/wavolator/pkg/logging"
+	"github.com/asciifaceman/wavolator/pkg/wavolate"
+	"go.uber.org/zap"
+
 	"github.com/spf13/cobra"
 )
+
+var label string
 
 // csvCmd represents the csv command
 var csvCmd = &cobra.Command{
@@ -32,11 +39,56 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("csv called")
+		logger := logging.Logger()
+		w, err := wavolate.New(
+			wavolate.WithFile(filename),
+			wavolate.WithReducer(reducer),
+			wavolate.WithResolution(uint(resolution)),
+			wavolate.WithLogger(),
+		)
+		if err != nil {
+			fmt.Println("[ERRO] - Failed to start up: ", err)
+			return
+		}
+
+		set, err := w.Sample()
+		if err != nil {
+			logger.Fatal("Failed to sample file.",
+				zap.String("error", err.Error()),
+			)
+		}
+
+		reduced := w.Reduce(set)
+		gen, err := generator.New(
+			generator.WithFile(filename),
+			generator.WithLogger(),
+			generator.WithLabel(label),
+		)
+		if err != nil {
+			logger.Fatal("Failed to create generator.",
+				zap.String("error", err.Error()),
+			)
+		}
+
+		s := gen.NewSet()
+		for _, item := range reduced.Samples {
+			s.NewSample(item.Sample)
+		}
+
+		err = gen.Write(s)
+		if err != nil {
+			logger.Fatal("Failed to write csv.",
+				zap.String("error", err.Error()),
+			)
+		}
+
 	},
 }
 
 func init() {
 	processCmd.AddCommand(csvCmd)
+	csvCmd.PersistentFlags().StringVarP(&label, "label", "l", label, "Label that describes this audio (tone, silence, etc)")
+	csvCmd.MarkPersistentFlagRequired("label")
 
 	// Here you will define your flags and configuration settings.
 
